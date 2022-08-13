@@ -11,7 +11,7 @@ const comments = require('./routes/comments_route');
 const app = express();
 
 var corsOptions = {
-    origin: ['http://localhost:8080', 'http://localhost:8082'],
+    origin: ['http://localhost:8080', 'http://localhost:8082', 'http://localhost:8083'],
     optionsSuccessStatus: 200
 }
 
