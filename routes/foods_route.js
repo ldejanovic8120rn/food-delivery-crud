@@ -27,8 +27,6 @@ function authToken(req, res, next) {
     });
 }
 
-route.use(authToken);
-
 //Get all foods
 route.get('/foods', (req, res) => {
     Foods.findAll({ include: 'restaurant' })
@@ -38,18 +36,13 @@ route.get('/foods', (req, res) => {
 
 //Get food by id
 route.get('/foods/:id', (req, res) => {
-    if (req.user.role === 'ADMIN' || req.user.role === 'MODERATOR') {
-        Foods.findOne({ where: { id: req.params.id }, include: 'restaurant' })
-            .then(row => res.json(row))
-            .catch(err => res.status(500).json(err));
-    }
-    else {
-        res.status(401).json({ message: 'Unauthorized' });
-    }
+    Foods.findOne({ where: { id: req.params.id }, include: 'restaurant' })
+        .then(row => res.json(row))
+        .catch(err => res.status(500).json(err));
 })
 
 //Create food
-route.post('/foods', (req, res) => {
+route.post('/foods', authToken, (req, res) => {
     if (req.user.role === 'ADMIN' || req.user.role === 'MODERATOR') {
         const validation = Joi.object().keys({
             restaurant_id: Joi.number().min(1).required(),
@@ -88,7 +81,7 @@ route.post('/foods', (req, res) => {
 })
 
 //Update food
-route.put('/foods/:id', (req, res) => {
+route.put('/foods/:id', authToken, (req, res) => {
     if (req.user.role === 'ADMIN' || req.user.role === 'MODERATOR') {
         const validation = Joi.object().keys({
             restaurant_id: Joi.number().min(1).required(),
@@ -127,7 +120,7 @@ route.put('/foods/:id', (req, res) => {
 })
 
 //Delete food
-route.delete('/foods/:id', (req, res) => {
+route.delete('/foods/:id', authToken, (req, res) => {
     if (req.user.role === 'ADMIN' || req.user.role === 'MODERATOR') {
         Foods.findOne({ where: { id: req.params.id }, include: 'restaurant' })
             .then(food => {

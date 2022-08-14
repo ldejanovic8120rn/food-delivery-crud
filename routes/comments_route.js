@@ -27,8 +27,6 @@ function authToken(req, res, next) {
     });
 }
 
-route.use(authToken);
-
 //Get all comments
 route.get('/comments', (req, res) => {
     Comments.findAll({ include: ['user', 'restaurant'] })  //chek multiple includes
@@ -38,18 +36,13 @@ route.get('/comments', (req, res) => {
 
 //Get comment by id
 route.get('/comments/:id', (req, res) => {
-    if (req.user.role === 'ADMIN' || req.user.role === 'MODERATOR') {
-        Comments.findOne({ where: { id: req.params.id }, include: ['user', 'restaurant'] })
-            .then(row => res.json(row))
-            .catch(err => res.status(500).json(err));
-    }
-    else {
-        res.status(401).json({ message: 'Unauthorized' });
-    }
+    Comments.findOne({ where: { id: req.params.id }, include: ['user', 'restaurant'] })
+        .then(row => res.json(row))
+        .catch(err => res.status(500).json(err));
 })
 
 //Create comment
-route.post('/comments', (req, res) => {
+route.post('/comments', authToken, (req, res) => {
     const validation = Joi.object().keys({
         restaurant_id: Joi.number().min(1).required(),
         rate: Joi.number().min(1).max(10).required(),
@@ -80,7 +73,7 @@ route.post('/comments', (req, res) => {
 })
 
 //Update comment
-route.put('/comments/:id', (req, res) => {
+route.put('/comments/:id', authToken, (req, res) => {
     const validation = Joi.object().keys({
         restaurant_id: Joi.number().min(1).required(),
         rate: Joi.number().min(1).max(10).required(),
@@ -109,7 +102,7 @@ route.put('/comments/:id', (req, res) => {
 })
 
 //Delete comment
-route.delete('/comments/:id', (req, res) => {
+route.delete('/comments/:id', authToken, (req, res) => {
     Comments.findOne({ where: { id: req.params.id }, include: ['user', 'restaurant'] })
         .then(comment => {
             comment.destroy()
