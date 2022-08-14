@@ -29,7 +29,6 @@ function authToken(req, res, next) {
 
 //Get all restaurants
 route.get('/restaurants', (req, res) => {
-    console.log("Dohvati sve restorane")
     Restaurants.findAll()
         .then(rows => res.json(rows))
         .catch(err => res.status(500).json(err));
