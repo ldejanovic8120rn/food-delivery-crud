@@ -28,8 +28,6 @@ function authToken(req, res, next) {
     });
 }
 
-route.use(authToken);
-
 //Get all users
 route.get('/users', (req, res) => {
     if (req.user.role === 'ADMIN') {
