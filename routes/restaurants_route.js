@@ -14,7 +14,7 @@ function authToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1];
 
     if (token == null) {
-        return res.status(401).json({ message: err });
+        return res.status(401).json({ message: "Token doesn't exist" });
     }
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
@@ -29,6 +29,7 @@ function authToken(req, res, next) {
 
 //Get all restaurants
 route.get('/restaurants', (req, res) => {
+    console.log("Dohvati sve restorane")
     Restaurants.findAll()
         .then(rows => res.json(rows))
         .catch(err => res.status(500).json(err));
