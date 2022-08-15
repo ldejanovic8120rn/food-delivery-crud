@@ -27,22 +27,16 @@ function authToken(req, res, next) {
     });
 }
 
-route.get('/test', (req, res) => {
-    Restaurants.findAll()
-        .then(rows => res.json(rows))
-        .catch(err => res.status(500).json(err));
-})
-
 //Get all restaurants
 route.get('/restaurants', (req, res) => {
-    Restaurants.findAll()
+    Restaurants.findAll({ include: ['foods', 'comments'] })
         .then(rows => res.json(rows))
         .catch(err => res.status(500).json(err));
 })
 
 //Get restaurant by id
 route.get('/restaurants/:id', (req, res) => {
-    Restaurants.findOne({ where: { id: req.params.id } })
+    Restaurants.findOne({ where: { id: req.params.id }, include: ['foods', 'comments'] })
         .then(row => res.json(row))
         .catch(err => res.status(500).json(err));
 })
