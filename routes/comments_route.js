@@ -34,9 +34,9 @@ route.get('/comments', (req, res) => {
         .catch(err => res.status(500).json(err));
 })
 
-//Get comment by id
+//Get comment by restaurant id
 route.get('/comments/:id', (req, res) => {
-    Comments.findOne({ where: { id: req.params.id }, include: ['user', 'restaurant'] })
+    Comments.findAll({ where: { restaurant_id: req.params.id }, include: ['user'] })
         .then(row => res.json(row))
         .catch(err => res.status(500).json(err));
 })

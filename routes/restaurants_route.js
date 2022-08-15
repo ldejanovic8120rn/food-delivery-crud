@@ -29,14 +29,14 @@ function authToken(req, res, next) {
 
 //Get all restaurants
 route.get('/restaurants', (req, res) => {
-    Restaurants.findAll({ include: ['foods', 'comments'] })
+    Restaurants.findAll({ include: ['foods'] })
         .then(rows => res.json(rows))
         .catch(err => res.status(500).json(err));
 })
 
 //Get restaurant by id
 route.get('/restaurants/:id', (req, res) => {
-    Restaurants.findOne({ where: { id: req.params.id }, include: ['foods', 'comments'] })
+    Restaurants.findOne({ where: { id: req.params.id }, include: ['foods'] })
         .then(row => res.json(row))
         .catch(err => res.status(500).json(err));
 })
