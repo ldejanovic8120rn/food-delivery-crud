@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: 'http://localhost:8083',
+        origin: '*',
         methods: ['GET', 'POST'],
         credentials: true
     },
@@ -26,7 +26,7 @@ const io = new Server(server, {
 });
 
 var corsOptions = {
-    origin: ['http://localhost:8080', 'http://localhost:8082', 'http://localhost:8083'],
+    origin: '*',
     optionsSuccessStatus: 200
 }
 
@@ -79,7 +79,7 @@ io.on('connection', socket => {
 
 
 
-server.listen({ port: 8081 }, async () => {
+server.listen({ port: process.env.PORT || 8081 }, async () => {
     await sequelize.authenticate();
     console.log('Crud server started!');
 });
